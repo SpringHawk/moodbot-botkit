@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Conversations\ExampleConversation;
 use App\Conversations\MoodInputConversation;
 use App\Http\Controllers\BotManController;
 use BotMan\Drivers\Slack\SlackDriver;
@@ -49,7 +50,7 @@ class AskForMoodInput extends Command
 
         foreach($userID as $key => $value)
         {
-            $botman->startConversation(new MoodInputConversation(), $value, SlackDriver::class);
+            $botman->startConversation(new ExampleConversation(), $value, SlackDriver::class);
 
         }
     }
