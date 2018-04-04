@@ -44,21 +44,21 @@ class AskForMoodInput extends Command
     public function handle()
     {
 
-        $mood = new Mood;
-        $mood->mood_value = '5';
-        $mood->user_name = 'david';
-        $mood->user_id = '12345';
-        $mood->save();
-//        $botman = app('botman');
-//        $botman->loadDriver('Slack');
-//        $response = $botman->sendRequest('users.list');
-//        $users = json_decode($response->getContent(), true);
-//        $userID = collect($users['members'])->pluck('profile.email', 'id')->filter()->flip()->all();
-//
-//        foreach($userID as $key => $value)
-//        {
-//            $botman->startConversation(new ExampleConversation(), $value, SlackDriver::class);
-//
-//        }
+//        $mood = new Mood;
+//        $mood->mood_value = '5';
+//        $mood->user_name = 'david';
+//        $mood->user_id = '12345';
+//        $mood->save();
+        $botman = app('botman');
+        $botman->loadDriver('Slack');
+        $response = $botman->sendRequest('users.list');
+        $users = json_decode($response->getContent(), true);
+        $userID = collect($users['members'])->pluck('profile.email', 'id')->filter()->flip()->all();
+
+        foreach($userID as $key => $value)
+        {
+            $botman->startConversation(new ExampleConversation(), $value, SlackDriver::class);
+
+        }
     }
 }
