@@ -24,7 +24,7 @@ class MoodInputConversation extends Conversation
 
 
 
-        return $this->ask('Would you like to tell me about your mood at work today?', function (Answer $response) {
+        return $this->ask('Would you like to tell me about your mood today?', function (Answer $response) {
 
             $question = Question::create('How is your mood at work today?')
                 ->fallback('Unable to ask question')
