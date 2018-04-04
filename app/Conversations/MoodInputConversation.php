@@ -64,6 +64,7 @@ class MoodInputConversation extends Conversation
                         }
                         $mood = new Mood;
                         $mood->mood_value = $answer->getValue();
+
                         $mood->user_name = 'David';
                         $mood->user_id = '12345';
                         $mood->save();
