@@ -61,6 +61,9 @@ class MoodInputConversation extends Conversation
                         else {
                             $this->say("I did not understand that");
                         }
+                        $mood = new Mood;
+                        $mood->mood_value = $answer;
+                        $mood->save();
                     }
                 });
             } else {
