@@ -9,7 +9,6 @@
 namespace App\Conversations;
 
 
-use App\Mood;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -62,12 +61,6 @@ class MoodInputConversation extends Conversation
                         else {
                             $this->say("I did not understand that");
                         }
-                        $mood = new Mood;
-                        $mood->mood_value = $answer->getValue();
-
-                        $mood->user_name = 'David';
-                        $mood->user_id = '12345';
-                        $mood->save();
                     }
                 });
             } else {
