@@ -63,7 +63,9 @@ class MoodInputConversation extends Conversation
                             $this->say("I did not understand that");
                         }
                         $mood = new Mood;
-                        $mood->mood_value = $answer;
+                        $mood->mood_value = $answer->getValue();
+                        $mood->user_name = 'David';
+                        $mood->user_id = '12345';
                         $mood->save();
                     }
                 });
