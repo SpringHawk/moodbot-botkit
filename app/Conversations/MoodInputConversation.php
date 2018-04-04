@@ -9,6 +9,7 @@
 namespace App\Conversations;
 
 
+use App\Mood;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
