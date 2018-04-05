@@ -54,6 +54,7 @@ class AskForMoodInput extends Command
         $botman->loadDriver('Slack');
         $response = $botman->sendRequest('users.list');
         $users = json_decode($response->getContent(), true);
+        
 //        $userID = collect($users['members'])->pluck('profile.email', 'id')->filter()->flip()->all();
 
         $botman->startConversation(new ExampleConversation(), 'U9G1JEG03', SlackDriver::class);
