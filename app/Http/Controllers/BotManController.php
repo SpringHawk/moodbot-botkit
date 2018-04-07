@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Conversations\ExampleConversation;
 use App\Conversations\MoodInputConversation;
+use App\Mood;
 use BotMan\BotMan\BotMan;
 use Illuminate\Http\Request;
 
@@ -33,6 +34,15 @@ class BotManController extends Controller
      */
     public function startConversation(BotMan $bot)
     {
+
         $bot->startConversation(new MoodInputConversation());
+        $user = $bot->getUser();
+        $id = $user->getId();
+        $username = $user->getUsername();
+        $mood = new Mood;
+        $mood->user_name = $username;
+        $mood->user_id = $id;
+        $mood->mood_value = $bot->userStorage()->get('moodValue');;
+        $mood->save();
     }
 }

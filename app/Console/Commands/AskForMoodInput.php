@@ -50,13 +50,13 @@ class AskForMoodInput extends Command
 //        $mood->user_id = '12345';
 //        $mood->save();
 
-        $botman = app('botman');
-        $botman->loadDriver('Slack');
-        $response = $botman->sendRequest('users.list');
-        $users = json_decode($response->getContent(), true);
+//        $botman = app('botman');
+//        $botman->loadDriver('Slack');
+//        $response = $botman->sendRequest('users.list');
+//        $users = json_decode($response->getContent(), true);
 //        $userID = collect($users['members'])->pluck('profile.email', 'id')->filter()->flip()->all();
 
-        $botman->say('Hello dud', 'U9G1JEG03', SlackDriver::class);
+//        $botman->say('Hello dud', 'U9G1JEG03', SlackDriver::class);
 //
 //        foreach($userID as $key => $value)
 //        {

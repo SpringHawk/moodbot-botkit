@@ -9,6 +9,8 @@
 namespace App\Conversations;
 
 
+
+use App\Mood;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -19,12 +21,20 @@ class MoodInputConversation extends Conversation
     /**
      * First question
      */
+//    var $mood;
+    var $moodValue;
+
+
     public function askMood()
     {
 
-
+//         $this->mood = new Mood;
 
         return $this->ask('Would you like to tell me about your mood today?', function (Answer $response) {
+
+//            $this->mood->user_name = $response->getUser();
+//            $this->mood->user_id = '12345';
+
 
             $question = Question::create('How is your mood at work today?')
                 ->fallback('Unable to ask question')
@@ -41,6 +51,9 @@ class MoodInputConversation extends Conversation
             if ($response->getText() === 'yes') {
                 $this->ask($question, function (Answer $answer) {
                     if ($answer->isInteractiveMessageReply()) {
+                        $this->bot->userStorage()->save([
+                            $answer->getValue() => $this->moodValue
+                        ]);
                         if ($answer->getValue() === '5') {
                             $this->say("Wohoo. It's good to hear that you are happy");
                         }
@@ -61,12 +74,16 @@ class MoodInputConversation extends Conversation
                         else {
                             $this->say("I did not understand that");
                         }
+
                     }
                 });
             } else {
                 $this->say('Ahh, okay. We can try tomorrow then. Have a nice day!');
             }
+//            $this->mood->mood_value = $this->moodValue;
+//            $this->mood->save();
         });
+
 
     }
     /**
