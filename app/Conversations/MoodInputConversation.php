@@ -15,26 +15,21 @@ use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Outgoing\Question;
+use Illuminate\Support\Facades\Log;
 
 class MoodInputConversation extends Conversation
 {
     /**
      * First question
      */
-//    var $mood;
-    var $moodValue;
 
 
     public function askMood()
     {
 
-//         $this->mood = new Mood;
+        $mood = new Mood;
 
-        return $this->ask('Would you like to tell me about your mood today?', function (Answer $response) {
-
-//            $this->mood->user_name = $response->getUser();
-//            $this->mood->user_id = '12345';
-
+        return $this->ask('Hello, would you like to tell me about your mood today?', function (Answer $response) use ($mood) {
 
             $question = Question::create('How is your mood at work today?')
                 ->fallback('Unable to ask question')
@@ -44,16 +39,12 @@ class MoodInputConversation extends Conversation
                     Button::create('Neutral :neutral_face:')->value('4'),
                     Button::create('Sick :face_with_thermometer:')->value('3'),
                     Button::create('Angry :angry:')->value('2'),
-                    Button::create('Sad :pensive:')->value('1'),
-                    Button::create('Unamused :unamused:')->value('3'),
+                    Button::create('Unamused :unamused:')->value('1'),
                 ]);
 
             if ($response->getText() === 'yes') {
-                $this->ask($question, function (Answer $answer) {
+                $this->ask($question, function (Answer $answer) use ($mood) {
                     if ($answer->isInteractiveMessageReply()) {
-                        $this->bot->userStorage()->save([
-                            $answer->getValue() => $this->moodValue
-                        ]);
                         if ($answer->getValue() === '5') {
                             $this->say("Wohoo. It's good to hear that you are happy");
                         }
@@ -76,15 +67,35 @@ class MoodInputConversation extends Conversation
                         }
 
                     }
+                    //Log::info('This should be first!');
+                    $moodValue = $answer->getValue();
+//                    $this->bot->userStorage()->save([
+//                        'mood_value' => $moodValue
+//                    ]);
+                    $user = $this->bot->getUser();
+                    $id = $user->getId();
+                    $username = $user->getUsername();
+                    $mood->user_name = $username;
+                    $mood->user_id = $id;
+                    $mood->mood_value = $moodValue;
+                    //$this->bot->userStorage()->delete('mood_value');
+                    $mood->save();
                 });
             } else {
                 $this->say('Ahh, okay. We can try tomorrow then. Have a nice day!');
             }
-//            $this->mood->mood_value = $this->moodValue;
-//            $this->mood->save();
+//            Log::info('Hello world!');
+//            $user = $this->bot->getUser();
+//            $id = $user->getId();
+//            $username = $user->getUsername();
+//            $mood->user_name = $username;
+//            $mood->user_id = $id;
+//            $moodValue = $this->bot->userStorage()->get('mood_value');
+//            $mood->mood_value = $moodValue;
+//            $this->bot->userStorage()->delete('mood_value');
+//            $mood->save();
+
         });
-
-
     }
     /**
      * Start the conversation
