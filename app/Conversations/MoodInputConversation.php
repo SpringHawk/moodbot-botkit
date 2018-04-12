@@ -9,7 +9,6 @@
 namespace App\Conversations;
 
 
-
 use App\Mood;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
@@ -29,9 +28,17 @@ class MoodInputConversation extends Conversation
 
         $mood = new Mood;
 
-        return $this->ask('Hello, would you like to tell me about your mood today?', function (Answer $response) use ($mood) {
+        $question = Question::create("Hello, would you like to tell me about your mood today?")
+            ->fallback('Unable to ask question')
+            ->callbackId('ask_reason')
+            ->addButtons([
+                Button::create('Yes, sure!')->value('yes'),
+                Button::create('No')->value('no'),
+            ]);
 
-            $question = Question::create('How is your mood at work today?')
+        return $this->ask($question, function (Answer $answer) use ($mood) {
+
+            $question = Question::create('How are you feeling today?')
                 ->fallback('Unable to ask question')
                 ->callbackId('ask_reason')
                 ->addButtons([
@@ -42,27 +49,23 @@ class MoodInputConversation extends Conversation
                     Button::create('Unamused :unamused:')->value('1'),
                 ]);
 
-            if ($response->getText() === 'yes') {
+//            if ($answer->isInteractiveMessageReply()) {
+            if ($answer->getValue() === 'yes' or $answer->getText() === 'yes') {
                 $this->ask($question, function (Answer $answer) use ($mood) {
                     if ($answer->isInteractiveMessageReply()) {
                         if ($answer->getValue() === '5') {
-                            $this->say("Wohoo. It's good to hear that you are happy");
-                        }
-                        else if ($answer->getValue() === '4') {
+                            $this->say("It's good to hear that you are happy");
+                        } else if ($answer->getValue() === '4') {
                             $this->say("I am sure we can cheer you up a bit. Have a random Chuck Norris joke");
                             $joke = json_decode(file_get_contents('http://api.icndb.com/jokes/random'));
                             $this->say($joke->value->joke);
-                        }
-                        else if ($answer->getValue() === '3') {
+                        } else if ($answer->getValue() === '3') {
                             $this->say("Oh noo. We hope that you will get well soon! :worried:");
-                        }
-                        else if ($answer->getValue() === '2') {
-                            $this->say("Thank you for your input. Try to breathe deeply a few times, I'm sure you will feel better");
-                        }
-                        else if ($answer->getValue() === '1') {
+                        } else if ($answer->getValue() === '2') {
+                            $this->say("Thank you for your input. I would suggest you to take a break");
+                        } else if ($answer->getValue() === '1') {
                             $this->say("We are sad to hear that. Would you like to talk about it?");
-                        }
-                        else {
+                        } else {
                             $this->say("I did not understand that");
                         }
 
@@ -84,23 +87,14 @@ class MoodInputConversation extends Conversation
             } else {
                 $this->say('Ahh, okay. We can try tomorrow then. Have a nice day!');
             }
-//            Log::info('Hello world!');
-//            $user = $this->bot->getUser();
-//            $id = $user->getId();
-//            $username = $user->getUsername();
-//            $mood->user_name = $username;
-//            $mood->user_id = $id;
-//            $moodValue = $this->bot->userStorage()->get('mood_value');
-//            $mood->mood_value = $moodValue;
-//            $this->bot->userStorage()->delete('mood_value');
-//            $mood->save();
-
         });
     }
+
     /**
      * Start the conversation
      */
-    public function run()
+    public
+    function run()
     {
         $this->askMood();
     }
