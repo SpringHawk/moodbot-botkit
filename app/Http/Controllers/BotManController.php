@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Conversations\ExampleConversation;
+use App\Conversations\LocationInputConversation;
 use App\Conversations\MoodInputConversation;
 use App\Mood;
 use App\MyFiles\IntermediaryData;
@@ -32,9 +33,15 @@ class BotManController extends Controller
      * Loaded through routes/botman.php
      * @param  BotMan $bot
      */
-    public function startConversation(BotMan $bot)
+    public function startMoodConversation(BotMan $bot)
     {
 
         $bot->startConversation(new MoodInputConversation());
+    }
+
+    public function startLocationConversation(BotMan $bot)
+    {
+
+        $bot->startConversation(new LocationInputConversation());
     }
 }
