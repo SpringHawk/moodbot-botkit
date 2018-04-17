@@ -22,3 +22,7 @@ Route::get('/botman/tinker', 'BotManController@tinker');
 Route::get('/hook', function () {
     return Mood::all();
 });
+
+Route::get('/moods', ['middleware' => 'cors', function () {
+    return Mood::all();
+}]);
