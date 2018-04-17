@@ -15,7 +15,8 @@ class MoodTable extends Migration
     {
         Schema::create('moods', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('mood_value');
+            $table->string('arousal');
+            $table->string('valence');
             $table->string('user_name');
             $table->string('user_id');
             $table->timestamps();
