@@ -43,10 +43,10 @@ class MoodInputConversation extends Conversation
                 ->callbackId('ask_reason')
                 ->addButtons([
                     Button::create('Happy :grin:')->value('5'),
-                    Button::create('Neutral :neutral_face:')->value('4'),
-                    Button::create('Sick :face_with_thermometer:')->value('3'),
-                    Button::create('Angry :angry:')->value('2'),
-                    Button::create('Unamused :unamused:')->value('1'),
+                    Button::create('Relaxed :relaxed:')->value('4'),
+                    Button::create('Neutral :neutral_face:')->value('3'),
+                    Button::create('Bored :unamused:')->value('2'),
+                    Button::create('Sad :white_frowning_face:')->value('1'),
                 ]);
 
 //            if ($answer->isInteractiveMessageReply()) {
@@ -70,17 +70,35 @@ class MoodInputConversation extends Conversation
                         }
 
                     }
-                    //Log::info('This should be first!');
+                    Log::info('This should be first!');
                     $moodValue = $answer->getValue();
+                    if ($moodValue === '5') {
+                        $mood->arousal = '5';
+                        $mood->valence = '5';
+                    } else if ($moodValue === '4') {
+                        $mood->arousal = '4';
+                        $mood->valence = '4';
+                    } else if ($moodValue === '3') {
+                        $mood->arousal = '3.2';
+                        $mood->valence = '3';
+                    } else if ($moodValue === '2') {
+                        $mood->arousal = '2';
+                        $mood->valence = '2';
+                    } else {
+                        $mood->arousal = '1.5';
+                        $mood->valence = '1.5';
+                    }
 //                    $this->bot->userStorage()->save([
 //                        'mood_value' => $moodValue
 //                    ]);
+//                    $mood->arousal = '1';
+//                    $mood->valence = '1';
                     $user = $this->bot->getUser();
                     $id = $user->getId();
                     $username = $user->getUsername();
                     $mood->user_name = $username;
                     $mood->user_id = $id;
-                    $mood->mood_value = $moodValue;
+                    //$mood->mood_value = $moodValue;
                     //$this->bot->userStorage()->delete('mood_value');
                     $mood->save();
                 });
