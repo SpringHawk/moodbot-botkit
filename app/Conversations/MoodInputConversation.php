@@ -44,12 +44,11 @@ class MoodInputConversation extends Conversation
                 ->addButtons([
                     Button::create('Happy :grin:')->value('5'),
                     Button::create('Relaxed :relaxed:')->value('4'),
-                    Button::create('Neutral :neutral_face:')->value('3'),
+                    Button::create('Okay :slightly_smiling_face:')->value('3'),
                     Button::create('Bored :unamused:')->value('2'),
-                    Button::create('Sad :white_frowning_face:')->value('1'),
+                    Button::create('Angry :angry:')->value('1'),
                 ]);
 
-//            if ($answer->isInteractiveMessageReply()) {
             if ($answer->getValue() === 'yes' or $answer->getText() === 'yes') {
                 $this->ask($question, function (Answer $answer) use ($mood) {
                     if ($answer->isInteractiveMessageReply()) {
@@ -70,36 +69,34 @@ class MoodInputConversation extends Conversation
                         }
 
                     }
-                    Log::info('This should be first!');
+                    //Log::info('This should be first!');
                     $moodValue = $answer->getValue();
+                    // Happy
                     if ($moodValue === '5') {
-                        $mood->arousal = '5';
-                        $mood->valence = '5';
+                        $mood->valence = '0.177';
+                        $mood->arousal = '0.508';
+                    // Relaxed
                     } else if ($moodValue === '4') {
-                        $mood->arousal = '4';
-                        $mood->valence = '4';
+                        $mood->valence = '0.237';
+                        $mood->arousal = '0.172';
+                    // Okay
                     } else if ($moodValue === '3') {
-                        $mood->arousal = '3.2';
-                        $mood->valence = '3';
+                        $mood->valence = '0.5';
+                        $mood->arousal = '0.5';
+                    // Bored
                     } else if ($moodValue === '2') {
-                        $mood->arousal = '2';
-                        $mood->valence = '2';
+                        $mood->valence = '0.583';
+                        $mood->arousal = '0.404';
+                    //Angry
                     } else {
-                        $mood->arousal = '1.5';
-                        $mood->valence = '1.5';
+                        $mood->valence = '0.75';
+                        $mood->arousal = '0.806';
                     }
-//                    $this->bot->userStorage()->save([
-//                        'mood_value' => $moodValue
-//                    ]);
-//                    $mood->arousal = '1';
-//                    $mood->valence = '1';
                     $user = $this->bot->getUser();
                     $id = $user->getId();
                     $username = $user->getUsername();
                     $mood->user_name = $username;
                     $mood->user_id = $id;
-                    //$mood->mood_value = $moodValue;
-                    //$this->bot->userStorage()->delete('mood_value');
                     $mood->save();
                 });
             } else {
@@ -111,8 +108,7 @@ class MoodInputConversation extends Conversation
     /**
      * Start the conversation
      */
-    public
-    function run()
+    public function run()
     {
         $this->askMood();
     }

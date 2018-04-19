@@ -11,6 +11,7 @@
 |
 */
 
+use App\Location;
 use App\Mood;
 
 Route::get('/', function () {
@@ -25,4 +26,8 @@ Route::get('/hook', function () {
 
 Route::get('/moods', ['middleware' => 'cors', function () {
     return Mood::all();
+}]);
+
+Route::get('/locations', ['middleware' => 'cors', function () {
+    return Location::all();
 }]);
