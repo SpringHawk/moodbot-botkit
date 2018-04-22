@@ -15,10 +15,12 @@ class LocationTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_location');
+            $table->integer('user_location');
             $table->string('user_name');
+            $table->string('name');
             $table->string('user_id');
-            $table->timestamps();
+            $table->string('img_location')->nullable();
+            $table->nullableTimestamps();
         });
     }
 
