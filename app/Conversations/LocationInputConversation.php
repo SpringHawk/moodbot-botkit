@@ -29,33 +29,41 @@ class LocationInputConversation extends Conversation
     {
         $location = new Location;
 
-        $question = Question::create("Please let me know where will you work from today.")
+        $question = Question::create("Hey! Would you like to tell me where you're going to be working, today?")
             ->fallback('Unable to ask question')
             ->callbackId('ask_reason')
             ->addButtons([
-                Button::create('1st Floor')->value('1floor'),
-                Button::create('2nd Floor')->value('2floor'),
-                Button::create('Home Office')->value('home'),
-                Button::create("I'm on vacation")->value('vacation'),
+                Button::create('1st Floor')->value('0'),
+                Button::create('3nd Floor')->value('1'),
+                Button::create('Home Office')->value('2'),
+                Button::create("Not Available")->value('3'),
             ]);
 
         return $this->ask($question, function (Answer $answer) use ($location) {
             if ($answer->isInteractiveMessageReply()) {
-                if ($answer->getValue() === '1floor' or $answer->getValue() === '2floor') {
-                    $this->say('Okay, we are happy you are here!');
+                if ($answer->getValue() === '0' or $answer->getValue() === '1') {
+                    $this->say('Cool! Happy to see you, here!');
                 } else {
-                    $this->say('Thank you for your input!');
+                    $this->say('Thanks for letting me know!');
                 }
             }
-            $user_location = $answer->getValue();
             $user = $this->bot->getUser();
+            $dbUser = Location::where('user_id', $user->getId())->first();
+            $user_location = $answer->getValue();
             $id = $user->getId();
             $username = $user->getUsername();
-            $location->user_name = $username;
-            $location->user_id = $id;
-            $location->user_location = $user_location;
+            $realname = $user->getInfo()['real_name'];
+            if ($dbUser === NULL) {
+                $location->name = $realname;
+                $location->user_name = $username;
+                $location->user_id = $id;
+                $location->user_location = $user_location;
+                $location->save();
+            } else {
+                $dbUser->update(['user_location' => $user_location, 'name' => $realname]);
+            }
+
             //$this->bot->userStorage()->delete('mood_value');
-            $location->save();
         });
     }
     /**
