@@ -28,17 +28,17 @@ class MoodInputConversation extends Conversation
 
         $mood = new Mood;
 
-        $question = Question::create("Hello, would you like to tell me about your mood today?")
+        $question = Question::create("Hey! I hope you're having a great day! Do you want to tell me how you feel?")
             ->fallback('Unable to ask question')
             ->callbackId('ask_reason')
             ->addButtons([
                 Button::create('Yes, sure!')->value('yes'),
-                Button::create('No')->value('no'),
+                Button::create('No, sorry')->value('no'),
             ]);
 
         return $this->ask($question, function (Answer $answer) use ($mood) {
 
-            $question = Question::create('How are you feeling today?')
+            $question = Question::create('Nice! So, how are you?')
                 ->fallback('Unable to ask question')
                 ->callbackId('ask_reason')
                 ->addButtons([
@@ -53,17 +53,15 @@ class MoodInputConversation extends Conversation
                 $this->ask($question, function (Answer $answer) use ($mood) {
                     if ($answer->isInteractiveMessageReply()) {
                         if ($answer->getValue() === '5') {
-                            $this->say("It's good to hear that you are happy");
+                            $this->say("Great to hear that you are happy :)");
                         } else if ($answer->getValue() === '4') {
-                            $this->say("I am sure we can cheer you up a bit. Have a random Chuck Norris joke");
-                            $joke = json_decode(file_get_contents('http://api.icndb.com/jokes/random'));
-                            $this->say($joke->value->joke);
+                            $this->say("Awesome, stay smooth!");
                         } else if ($answer->getValue() === '3') {
-                            $this->say("Oh noo. We hope that you will get well soon! :worried:");
+                            $this->say("Thanks for letting me know!");
                         } else if ($answer->getValue() === '2') {
-                            $this->say("Thank you for your input. I would suggest you to take a break");
+                            $this->say("When I get bored at work I sometimes start working to pass the time.");
                         } else if ($answer->getValue() === '1') {
-                            $this->say("We are sad to hear that. Would you like to talk about it?");
+                            $this->say("Oh no! I hope you cheer up, soon.");
                         } else {
                             $this->say("I did not understand that");
                         }
@@ -100,7 +98,7 @@ class MoodInputConversation extends Conversation
                     $mood->save();
                 });
             } else {
-                $this->say('Ahh, okay. We can try tomorrow then. Have a nice day!');
+                $this->say("Ahh, okay. I'll ask you again, tomorrow. Have a nice day!");
             }
         });
     }
